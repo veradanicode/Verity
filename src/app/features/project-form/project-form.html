@@ -1,1 +1,174 @@
-<p>project-form works!</p>
+<div class="project-form-page">
+  <div class="page-head">
+    <div>
+      <a routerLink="/projects" class="back-link"> ← Back to projects </a>
+
+      <span class="eyebrow">PROJECTS</span>
+
+      <h1>Create New Project</h1>
+
+      <p>Add the essential information needed to create a new project.</p>
+    </div>
+  </div>
+
+  <form class="project-form" [formGroup]="projectForm" (ngSubmit)="submit()">
+    <!-- BASIC INFORMATION -->
+
+    <section class="form-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">01</span>
+          <h2>Basic Information</h2>
+          <p>Tell us about the project.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="name">
+            Project name
+            <span>*</span>
+          </label>
+
+          <input id="name" type="text" formControlName="name" placeholder="e.g. Website Redesign" />
+
+          <small class="error" *ngIf="name.touched && name.invalid">
+            <span *ngIf="name.errors?.['required']"> Project name is required. </span>
+
+            <span *ngIf="name.errors?.['minlength']">
+              Project name must be at least 3 characters.
+            </span>
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="client">
+            Client / Department
+            <span>*</span>
+          </label>
+
+          <input id="client" type="text" formControlName="client" placeholder="e.g. Marketing" />
+
+          <small class="error" *ngIf="client.touched && client.invalid">
+            Client or department is required.
+          </small>
+        </div>
+
+        <div class="form-field full-width">
+          <label for="description">
+            Description
+            <span>*</span>
+          </label>
+
+          <textarea
+            id="description"
+            rows="5"
+            formControlName="description"
+            placeholder="Describe what this project is about..."
+          ></textarea>
+
+          <small class="error" *ngIf="description.touched && description.invalid">
+            <span *ngIf="description.errors?.['required']"> Project description is required. </span>
+
+            <span *ngIf="description.errors?.['minlength']">
+              Description must be at least 20 characters.
+            </span>
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT DETAILS -->
+
+    <section class="form-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">02</span>
+          <h2>Project Details</h2>
+          <p>Set the project's priority and ownership.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="priority">
+            Priority
+            <span>*</span>
+          </label>
+
+          <select id="priority" formControlName="priority">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="owner">
+            Project owner
+            <span>*</span>
+          </label>
+
+          <input id="owner" type="text" formControlName="owner" placeholder="e.g. Amara Kelo" />
+
+          <small class="error" *ngIf="owner.touched && owner.invalid">
+            Project owner is required.
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="startDate">
+            Start date
+            <span>*</span>
+          </label>
+
+          <input id="startDate" type="date" formControlName="startDate" />
+
+          <small class="error" *ngIf="startDate.touched && startDate.invalid">
+            Start date is required.
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="dueDate">
+            Due date
+            <span>*</span>
+          </label>
+
+          <input id="dueDate" type="date" formControlName="dueDate" />
+
+          <small class="error" *ngIf="dueDate.touched && dueDate.invalid">
+            Due date is required.
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="budget">
+            Budget
+            <span>*</span>
+          </label>
+
+          <div class="input-prefix">
+            <span>₦</span>
+
+            <input id="budget" type="number" formControlName="budget" min="1" placeholder="0" />
+          </div>
+
+          <small class="error" *ngIf="budget.touched && budget.invalid">
+            <span *ngIf="budget.errors?.['required']"> Budget is required. </span>
+
+            <span *ngIf="budget.errors?.['min']"> Budget must be greater than 0. </span>
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM ACTIONS -->
+
+    <div class="form-actions">
+      <a routerLink="/projects" class="cancel-button"> Cancel </a>
+
+      <button type="submit" class="primary-button">Create Project</button>
+    </div>
+  </form>
+</div>
