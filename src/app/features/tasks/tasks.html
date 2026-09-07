@@ -1,0 +1,149 @@
+<section class="tasks-page">
+  <!-- PAGE HEADER -->
+
+  <div class="page-head">
+    <div>
+      <span class="eyebrow">WORKSPACE</span>
+
+      <h1>Tasks</h1>
+
+      <p>Manage work across all your projects and teams.</p>
+    </div>
+
+    <button class="primary-button">
+      <span>+</span>
+      New task
+    </button>
+  </div>
+
+  <!-- TOOLBAR -->
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+
+        <path d="m20 20-4-4"></path>
+      </svg>
+
+      <input type="text" placeholder="Filter tasks..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="filters">
+      <button [class.active]="selectedStatus === 'All'" (click)="setStatus('All')">All</button>
+
+      <button [class.active]="selectedStatus === 'Pending'" (click)="setStatus('Pending')">
+        Pending
+      </button>
+
+      <button [class.active]="selectedStatus === 'In Progress'" (click)="setStatus('In Progress')">
+        In progress
+      </button>
+
+      <button [class.active]="selectedStatus === 'Completed'" (click)="setStatus('Completed')">
+        Completed
+      </button>
+    </div>
+  </div>
+
+  <!-- SECONDARY FILTERS -->
+
+  <div class="secondary-filters">
+    <select [(ngModel)]="selectedPriority">
+      <option value="All">All priorities</option>
+
+      <option value="High">High priority</option>
+
+      <option value="Medium">Medium priority</option>
+
+      <option value="Low">Low priority</option>
+    </select>
+
+    <select [(ngModel)]="selectedProject">
+      <option value="All">All projects</option>
+
+      <option *ngFor="let project of projects" [value]="project">
+        {{ project }}
+      </option>
+    </select>
+  </div>
+
+  <!-- TASK LIST -->
+
+  <div class="task-list">
+    <article class="task-card" *ngFor="let task of filteredTasks">
+      <!-- CHECKBOX -->
+
+      <button
+        class="task-check"
+        [class.completed]="task.status === 'Completed'"
+        (click)="toggleTask(task)"
+        [attr.aria-label]="
+          task.status === 'Completed' ? 'Mark task as pending' : 'Mark task as completed'
+        "
+      >
+        <span *ngIf="task.status === 'Completed'"> ✓ </span>
+      </button>
+
+      <!-- TASK CONTENT -->
+
+      <div class="task-content">
+        <div class="task-title-row">
+          <h2>
+            {{ task.title }}
+          </h2>
+
+          <span class="priority" [class]="getPriorityClass(task.priority)">
+            {{ task.priority }}
+          </span>
+        </div>
+
+        <p class="task-description">
+          {{ task.description }}
+        </p>
+
+        <div class="task-meta">
+          <a [routerLink]="['/projects', task.projectId]" class="project-link">
+            {{ task.projectName }}
+          </a>
+
+          <span>•</span>
+
+          <span> Due {{ task.dueDate }} </span>
+        </div>
+      </div>
+
+      <!-- ASSIGNEE -->
+
+      <div class="assignee">
+        <div class="avatar">
+          {{ task.assigneeInitials }}
+        </div>
+
+        <div>
+          <strong>
+            {{ task.assignee }}
+          </strong>
+
+          <span> Assignee </span>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+
+      <span class="status" [class]="getStatusClass(task.status)">
+        {{ task.status }}
+      </span>
+    </article>
+  </div>
+
+  <!-- EMPTY STATE -->
+
+  <div class="empty-state" *ngIf="filteredTasks.length === 0">
+    <div class="empty-icon">⌕</div>
+
+    <h2>No tasks found</h2>
+
+    <p>Try changing your search or filters.</p>
+  </div>
+</section>

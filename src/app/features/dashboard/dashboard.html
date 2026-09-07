@@ -1,0 +1,295 @@
+<!-- Sidebar -->
+<!-- <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">V</span>
+      <span class="brand-name">Verity</span>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link is-active" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M3 10.5 10 4l7 6.5M5 9v7h10V9"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        Dashboard
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <rect
+              x="3"
+              y="5"
+              width="14"
+              height="11"
+              rx="1.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+            <path d="M3 8h14" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+        </span>
+        Projects
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m4 10.5 3.5 3.5L16 5.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        Tasks
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <rect
+              x="3"
+              y="4"
+              width="14"
+              height="13"
+              rx="1.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+            <path
+              d="M3 8h14M7 2.5v3M13 2.5v3"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        Calendar
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="7.2" cy="7" r="2.6" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="14" cy="8.2" r="2" stroke="currentColor" stroke-width="1.6" />
+            <path
+              d="M2.5 16c.6-2.7 2.4-4 4.7-4s4.1 1.3 4.7 4M12.6 12.7c1.8.2 3 1.4 3.4 3.3"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        Team
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M4 16V9M10 16V4M16 16v-6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        Reports
+      </a>
+    </nav>
+
+    <a class="nav-link nav-settings" href="javascript:void(0)">
+      <span class="nav-icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6" />
+          <path
+            d="M10 2.8v2M10 15.2v2M17.2 10h-2M4.8 10h-2M15.1 4.9l-1.4 1.4M6.3 13.7l-1.4 1.4M15.1 15.1l-1.4-1.4M6.3 6.3 4.9 4.9"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+      Settings
+    </a>
+  </aside>
+
+  <!-- Main -->
+
+<main class="content">
+  <section class="page-head">
+    <div>
+      <h1>Good morning, {{ userName }}</h1>
+      <p>{{ todayLabel }} — here's where things stand today.</p>
+    </div>
+    <button class="btn-primary" type="button">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path
+          d="M10 4v12M4 10h12"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+        />
+      </svg>
+      New project
+    </button>
+  </section>
+
+  <!-- Stat cards -->
+  <section class="stats-grid" aria-label="Key numbers">
+    <article class="stat-card" *ngFor="let stat of stats" [attr.data-accent]="stat.accent">
+      <div class="stat-icon">
+        <svg *ngIf="stat.icon === 'folder'" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M3 7.5c0-.8.7-1.5 1.5-1.5h4l1.8 2h8.2c.8 0 1.5.7 1.5 1.5v9c0 .8-.7 1.5-1.5 1.5h-14A1.5 1.5 0 0 1 3 18.5v-11Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <svg *ngIf="stat.icon === 'bolt'" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12.5 3 5 13.5h5.5L10.5 21 19 9.5h-6L12.5 3Z"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <svg *ngIf="stat.icon === 'clock'" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6" />
+          <path d="M12 8v4.5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+        <svg *ngIf="stat.icon === 'check'" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M4.5 12.5 9 17l10-11"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <p class="stat-label">{{ stat.label }}</p>
+      <p class="stat-value">{{ stat.value }}</p>
+      <p class="stat-delta" [class.is-down]="stat.deltaTone === 'down'">{{ stat.delta }}</p>
+    </article>
+  </section>
+
+  <!-- Workspace -->
+  <section class="workspace-grid">
+    <div class="col-primary">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Projects in motion</h2>
+          <a class="panel-link" href="javascript:void(0)">View all</a>
+        </div>
+
+        <div class="project-row" *ngFor="let project of projects">
+          <div class="project-info">
+            <p class="project-name">{{ project.name }}</p>
+            <p class="project-meta">{{ project.client }} · {{ project.dueLabel }}</p>
+          </div>
+
+          <div class="project-progress">
+            <div class="progress-track">
+              <div class="progress-fill" [style.width.%]="project.progress"></div>
+            </div>
+            <span class="progress-value">{{ project.progress }}%</span>
+          </div>
+
+          <div class="project-avatars">
+            <span class="avatar avatar-stack" *ngFor="let person of project.initials">{{
+              person
+            }}</span>
+          </div>
+
+          <span class="status-pill" [attr.data-status]="project.status">{{ project.status }}</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Today &amp; this week</h2>
+          <span class="panel-note">{{ completionRate }}% done</span>
+        </div>
+
+        <ul class="task-list">
+          <li class="task-row" *ngFor="let task of tasks" [class.is-done]="task.done">
+            <button
+              class="task-check"
+              type="button"
+              (click)="toggleTask(task)"
+              [attr.aria-pressed]="task.done"
+              [attr.aria-label]="'Mark ' + task.title + ' as done'"
+            >
+              <svg *ngIf="task.done" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M3.5 8.5 6.5 11l6-7"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+            <div class="task-body">
+              <p class="task-title">{{ task.title }}</p>
+              <p class="task-meta">{{ task.project }}</p>
+            </div>
+            <span class="priority-pill" [attr.data-priority]="task.priority">{{
+              task.priority
+            }}</span>
+            <span class="task-due">{{ task.due }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-secondary">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>September</h2>
+          <span class="panel-note">Week 2</span>
+        </div>
+        <div class="mini-calendar">
+          <div class="calendar-day" *ngFor="let day of calendarDays" [class.is-today]="day.isToday">
+            <span class="calendar-day-label">{{ day.label }}</span>
+            <span class="calendar-day-date">{{ day.date }}</span>
+            <span class="calendar-day-dot" *ngIf="day.hasEvent"></span>
+          </div>
+        </div>
+        <div class="calendar-event">
+          <span class="calendar-event-time">10:00</span>
+          <div>
+            <p class="calendar-event-title">Sprint planning</p>
+            <p class="calendar-event-meta">Mobile App v2 · Room 2</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Team</h2>
+          <a class="panel-link" href="javascript:void(0)">Manage</a>
+        </div>
+        <ul class="team-list">
+          <li class="team-row" *ngFor="let member of team">
+            <span class="avatar avatar-team">
+              {{ member.initials }}
+              <span class="presence-dot" [class.is-online]="member.online"></span>
+            </span>
+            <div class="team-info">
+              <p class="team-name">{{ member.name }}</p>
+              <p class="team-role">{{ member.role }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>

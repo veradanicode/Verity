@@ -1,0 +1,329 @@
+<section class="project-details-page">
+  <a routerLink="/projects" class="back-link">
+    <span>←</span>
+    Projects
+  </a>
+
+  <ng-container *ngIf="project; else notFound">
+    <!-- HEADER -->
+
+    <header class="project-header">
+      <div class="project-heading">
+        <div class="project-title-row">
+          <div class="project-icon">
+            {{ project.name.charAt(0) }}
+          </div>
+
+          <div>
+            <span class="eyebrow"> PROJECT </span>
+
+            <h1>
+              {{ project.name }}
+            </h1>
+          </div>
+        </div>
+
+        <p class="project-summary">
+          {{ project.description }}
+        </p>
+
+        <div class="project-meta">
+          <span>
+            {{ project.client }}
+          </span>
+
+          <span>•</span>
+
+          <span> {{ project.priority }} priority </span>
+
+          <span>•</span>
+
+          <span class="status" [class]="getStatusClass(project.status)">
+            {{ project.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="secondary-button">Edit project</button>
+
+        <button class="primary-button">+ Add task</button>
+      </div>
+    </header>
+
+    <!-- PROJECT INFORMATION -->
+
+    <section class="details-card description-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow"> ABOUT </span>
+
+          <h2>Project description</h2>
+        </div>
+      </div>
+
+      <p class="full-description">
+        {{ project.description }}
+      </p>
+    </section>
+
+    <!-- PROJECT META -->
+
+    <section class="details-card">
+      <div class="info-grid">
+        <div class="info-item">
+          <span>Project owner</span>
+
+          <strong>
+            {{ project.owner }}
+          </strong>
+        </div>
+
+        <div class="info-item">
+          <span>Client / Department</span>
+
+          <strong>
+            {{ project.client }}
+          </strong>
+        </div>
+
+        <div class="info-item">
+          <span>Start date</span>
+
+          <strong>
+            {{ project.startDate }}
+          </strong>
+        </div>
+
+        <div class="info-item">
+          <span>Due date</span>
+
+          <strong>
+            {{ project.dueDate }}
+          </strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+
+    <section class="details-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow"> PROGRESS </span>
+
+          <h2>Project progress</h2>
+        </div>
+
+        <strong class="large-value"> {{ project.progress }}% </strong>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-bar" [style.width.%]="project.progress"></div>
+      </div>
+
+      <div class="progress-footer">
+        <span> Project completion </span>
+
+        <strong> {{ project.progress }}% complete </strong>
+      </div>
+    </section>
+
+    <!-- OBJECTIVES + DELIVERABLES -->
+
+    <div class="two-column">
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow"> OBJECTIVES </span>
+
+            <h2>Project objectives</h2>
+          </div>
+        </div>
+
+        <ul class="detail-list">
+          <li *ngFor="let objective of project.objectives">
+            <span class="list-icon">✓</span>
+
+            <span>
+              {{ objective }}
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow"> DELIVERABLES </span>
+
+            <h2>Expected deliverables</h2>
+          </div>
+        </div>
+
+        <ul class="detail-list">
+          <li *ngFor="let deliverable of project.deliverables">
+            <span class="list-icon">•</span>
+
+            <span>
+              {{ deliverable }}
+            </span>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- TEAM + BUDGET -->
+
+    <div class="two-column">
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow"> TEAM </span>
+
+            <h2>Project team</h2>
+          </div>
+        </div>
+
+        <div class="team-list">
+          <div class="team-member" *ngFor="let member of project.team">
+            <div class="avatar">
+              {{ member.initials }}
+            </div>
+
+            <div class="member-info">
+              <strong>
+                {{ member.name }}
+              </strong>
+
+              <span>
+                {{ member.role }}
+              </span>
+            </div>
+
+            <span class="presence" [class.online]="member.online"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="details-card">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow"> FINANCE </span>
+
+            <h2>Project budget</h2>
+          </div>
+        </div>
+
+        <div class="budget-main">
+          <strong> ₦{{ project.spent | number }} </strong>
+
+          <span> of ₦{{ project.budget | number }} </span>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-bar budget-bar" [style.width.%]="budgetUsedPercentage"></div>
+        </div>
+
+        <div class="progress-footer">
+          <span> Budget used </span>
+
+          <strong> {{ budgetUsedPercentage }}% </strong>
+        </div>
+      </section>
+    </div>
+
+    <!-- RISKS -->
+
+    <section class="details-card risks-card" *ngIf="project.risks.length > 0">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow"> ATTENTION </span>
+
+          <h2>Risks & blockers</h2>
+        </div>
+      </div>
+
+      <div class="risk-list">
+        <div class="risk-item" *ngFor="let risk of project.risks">
+          <span class="risk-icon"> ! </span>
+
+          <span>
+            {{ risk }}
+          </span>
+        </div>
+      </div>
+      <section class="details-card tasks-card">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">WORK</span>
+            <h2>Project Tasks</h2>
+            <p>{{ completedTasks }} of {{ tasks.length }} tasks completed</p>
+          </div>
+
+          <span class="task-progress"> {{ taskCompletionRate }}% </span>
+        </div>
+
+        <div class="task-list" *ngIf="tasks.length > 0">
+          <article class="project-task" *ngFor="let task of tasks">
+            <button
+              class="task-checkbox"
+              [class.completed]="task.status === 'Completed'"
+              (click)="toggleTask(task)"
+              [attr.aria-label]="
+                task.status === 'Completed' ? 'Mark task as pending' : 'Mark task as completed'
+              "
+            >
+              <span *ngIf="task.status === 'Completed'"> ✓ </span>
+            </button>
+
+            <div class="task-main">
+              <div class="task-title-row">
+                <h3 [class.task-done]="task.status === 'Completed'">
+                  {{ task.title }}
+                </h3>
+
+                <span class="priority" [class]="getPriorityClass(task.priority)">
+                  {{ task.priority }}
+                </span>
+              </div>
+
+              <p>
+                {{ task.description }}
+              </p>
+
+              <div class="task-meta">
+                <span> Due {{ task.dueDate }} </span>
+
+                <span>
+                  {{ task.assignee }}
+                </span>
+
+                <span class="task-status" [class]="getTaskStatusClass(task.status)">
+                  {{ task.status }}
+                </span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="empty-state" *ngIf="tasks.length === 0">
+          <h3>No tasks yet</h3>
+          <p>Tasks assigned to this project will appear here.</p>
+        </div>
+      </section>
+    </section>
+  </ng-container>
+
+  <ng-template #notFound>
+    <section class="empty-state">
+      <div class="empty-icon">!</div>
+
+      <h2>Project not found</h2>
+
+      <p>The project you're looking for doesn't exist.</p>
+
+      <a routerLink="/projects" class="primary-button"> Back to projects </a>
+    </section>
+  </ng-template>
+</section>

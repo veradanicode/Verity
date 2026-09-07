@@ -1,0 +1,181 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">V</span>
+      <span class="brand-name">Verity</span>
+    </div>
+
+    <nav class="nav">
+      <a
+        class="nav-link is-active"
+        href="javascript:void(0)"
+        routerLink="/dashboard"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M3 10.5 10 4l7 6.5M5 9v7h10V9"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        Dashboard
+      </a>
+      <a
+        class="nav-link"
+        href="javascript:void(0)"
+        class="nav-link"
+        routerLink="/projects"
+        routerLinkActive="is-active"
+      >
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <rect
+              x="3"
+              y="5"
+              width="14"
+              height="11"
+              rx="1.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+            <path d="M3 8h14" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+        </span>
+        Projects
+      </a>
+      <a
+        class="nav-link"
+        href="javascript:void(0)"
+        class="nav-link"
+        routerLink="/tasks"
+        routerLinkActive="is-active"
+      >
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="m4 10.5 3.5 3.5L16 5.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        Tasks
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <rect
+              x="3"
+              y="4"
+              width="14"
+              height="13"
+              rx="1.5"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+            <path
+              d="M3 8h14M7 2.5v3M13 2.5v3"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        Calendar
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="7.2" cy="7" r="2.6" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="14" cy="8.2" r="2" stroke="currentColor" stroke-width="1.6" />
+            <path
+              d="M2.5 16c.6-2.7 2.4-4 4.7-4s4.1 1.3 4.7 4M12.6 12.7c1.8.2 3 1.4 3.4 3.3"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        Team
+      </a>
+      <a class="nav-link" href="javascript:void(0)">
+        <span class="nav-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M4 16V9M10 16V4M16 16v-6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+        Reports
+      </a>
+    </nav>
+
+    <a class="nav-link nav-settings" href="javascript:void(0)">
+      <span class="nav-icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6" />
+          <path
+            d="M10 2.8v2M10 15.2v2M17.2 10h-2M4.8 10h-2M15.1 4.9l-1.4 1.4M6.3 13.7l-1.4 1.4M15.1 15.1l-1.4-1.4M6.3 6.3 4.9 4.9"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+      Settings
+    </a>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <div class="search">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="8.5" cy="8.5" r="5.2" stroke="currentColor" stroke-width="1.6" />
+          <path
+            d="m16 16-3.2-3.2"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+        <input type="text" placeholder="Search projects, tasks, people…" aria-label="Search" />
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" type="button" aria-label="Notifications">
+          <svg viewBox="0 0 20 20" fill="none">
+            <path
+              d="M5 8a5 5 0 0 1 10 0c0 3.2 1 4.3 1.4 4.8H3.6C4 12.3 5 11.2 5 8Z"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M8.2 15.5a1.9 1.9 0 0 0 3.6 0"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+          <span class="icon-btn-dot"></span>
+        </button>
+        <div class="avatar avatar-topbar">AK</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
