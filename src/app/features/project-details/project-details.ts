@@ -52,6 +52,11 @@ export class ProjectDetails implements OnInit {
     const newStatus = task.status === 'Completed' ? 'Pending' : 'Completed';
 
     this.taskService.updateTaskStatus(task.id, newStatus);
+
+    // Refresh the project tasks
+    if (this.project) {
+      this.tasks = this.taskService.getTasksByProjectId(this.project.id);
+    }
   }
 
   get completedTasks(): number {
@@ -59,6 +64,13 @@ export class ProjectDetails implements OnInit {
   }
 
   get taskCompletionRate(): number {
+    if (this.tasks.length === 0) {
+      return 0;
+    }
+
+    return Math.round((this.completedTasks / this.tasks.length) * 100);
+  }
+  get calculatedProgress(): number {
     if (this.tasks.length === 0) {
       return 0;
     }
