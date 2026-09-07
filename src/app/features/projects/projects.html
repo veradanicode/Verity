@@ -84,11 +84,11 @@
       <div class="progress-section">
         <div class="progress-label">
           <span>Progress</span>
-          <strong>{{ project.progress }}%</strong>
+          <strong>{{ getProjectProgress(project.id) }}%</strong>
         </div>
 
         <div class="progress-track">
-          <div class="progress-bar" [style.width.%]="project.progress"></div>
+          <div class="progress-bar" [style.width.%]="getProjectProgress(project.id)"></div>
         </div>
       </div>
 
