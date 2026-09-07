@@ -115,17 +115,17 @@
           <h2>Project progress</h2>
         </div>
 
-        <strong class="large-value"> {{ project.progress }}% </strong>
+        <strong class="large-value"> {{ calculatedProgress }}% </strong>
       </div>
 
       <div class="progress-track">
-        <div class="progress-bar" [style.width.%]="project.progress"></div>
+        <div class="progress-bar" [style.width.%]="calculatedProgress"></div>
       </div>
 
       <div class="progress-footer">
         <span> Project completion </span>
 
-        <strong> {{ project.progress }}% complete </strong>
+        <strong> {{ calculatedProgress }}% complete </strong>
       </div>
     </section>
 
