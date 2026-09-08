@@ -820,6 +820,81 @@
   outline-offset: 2px;
 }
 
+/* PROJECT ACTIONS */
+
+.project-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.secondary-button,
+.primary-button,
+.danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.secondary-button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-soft);
+}
+
+.secondary-button:hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.primary-button {
+  border: 0;
+  background: var(--coral);
+  color: white;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.danger-button {
+  border: 1px solid var(--coral-tint);
+  background: var(--surface);
+  color: var(--coral);
+}
+
+.danger-button:hover {
+  background: var(--coral-tint);
+  border-color: var(--coral);
+}
+
+.secondary-button:focus-visible,
+.primary-button:focus-visible,
+.danger-button:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.secondary-button:active,
+.primary-button:active,
+.danger-button:active {
+  transform: translateY(1px);
+}
+
 @media (max-width: 700px) {
   .section-heading {
     align-items: flex-start;
