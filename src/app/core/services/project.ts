@@ -294,4 +294,38 @@ export class ProjectService {
   getProjectById(id: number): Project | undefined {
     return this.projects.find((project) => project.id === id);
   }
+
+  createProject(data: {
+    name: string;
+    client: string;
+    description: string;
+    priority: 'High' | 'Medium' | 'Low';
+    startDate: string;
+    dueDate: string;
+    owner: string;
+    budget: number;
+  }): Project {
+    const newProject: Project = {
+      id: this.projects.length + 1,
+      name: data.name,
+      client: data.client,
+      description: data.description,
+      progress: 0,
+      status: 'On track',
+      priority: data.priority,
+      startDate: data.startDate,
+      dueDate: data.dueDate,
+      owner: data.owner,
+      team: [],
+      budget: data.budget,
+      spent: 0,
+      objectives: [],
+      deliverables: [],
+      risks: [],
+    };
+
+    this.projects.push(newProject);
+
+    return newProject;
+  }
 }
