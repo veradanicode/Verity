@@ -4,6 +4,7 @@ import { Dashboard } from './features/dashboard/dashboard';
 import { Projects } from './features/projects/projects';
 import { ProjectDetails } from './features/project-details/project-details';
 import { Tasks } from './features/tasks/tasks';
+import { ProjectForm } from './features/project-form/project-form';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,10 @@ export const routes: Routes = [
       {
         path: 'projects',
         component: Projects,
+      },
+      {
+        path: 'projects/new',
+        component: ProjectForm,
       },
       {
         path: 'projects/:id',
