@@ -328,4 +328,35 @@ export class ProjectService {
 
     return newProject;
   }
+
+  updateProject(
+    id: number,
+    data: {
+      name: string;
+      client: string;
+      description: string;
+      priority: 'High' | 'Medium' | 'Low';
+      startDate: string;
+      dueDate: string;
+      owner: string;
+      budget: number;
+    },
+  ): Project | undefined {
+    const project = this.projects.find((project) => project.id === id);
+
+    if (!project) {
+      return undefined;
+    }
+
+    project.name = data.name;
+    project.client = data.client;
+    project.description = data.description;
+    project.priority = data.priority;
+    project.startDate = data.startDate;
+    project.dueDate = data.dueDate;
+    project.owner = data.owner;
+    project.budget = data.budget;
+
+    return project;
+  }
 }
