@@ -7,15 +7,18 @@
 
       <span class="eyebrow">TASKS</span>
 
-      <h1>Create New Task</h1>
+      <h1>{{ pageTitle }}</h1>
 
       <p *ngIf="project">
-        Add a task to
-        <strong>{{ project.name }}</strong
-        >.
+        {{ pageDescription }}
+        <strong *ngIf="!isEditMode">
+          {{ project.name }}
+        </strong>
       </p>
 
-      <p *ngIf="!project">Create a task for your project.</p>
+      <p *ngIf="!project">
+        {{ pageDescription }}
+      </p>
     </div>
   </div>
 
@@ -164,7 +167,9 @@
         Cancel
       </a>
 
-      <button type="submit" class="primary-button">Create Task</button>
+      <button type="submit" class="primary-button">
+        {{ submitButtonText }}
+      </button>
     </div>
   </form>
 </div>
