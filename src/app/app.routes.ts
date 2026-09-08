@@ -29,6 +29,10 @@ export const routes: Routes = [
         component: TaskForm,
       },
       {
+        path: 'projects/:id/tasks/:taskId/edit',
+        component: TaskForm,
+      },
+      {
         path: 'projects/:id/edit',
         component: ProjectForm,
       },
