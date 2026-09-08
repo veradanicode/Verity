@@ -31,9 +31,12 @@ export class ProjectDetails implements OnInit {
 
       this.project = this.projectService.getProjectById(id);
 
-      if (this.project) {
-        this.tasks = this.taskService.getTasksByProjectId(this.project.id);
+      if (!this.project) {
+        this.tasks = [];
+        return;
       }
+
+      this.loadProjectTasks();
     });
   }
 
@@ -54,10 +57,7 @@ export class ProjectDetails implements OnInit {
 
     this.taskService.updateTaskStatus(task.id, newStatus);
 
-    // Refresh the project tasks
-    if (this.project) {
-      this.tasks = this.taskService.getTasksByProjectId(this.project.id);
-    }
+    this.loadProjectTasks();
   }
 
   get completedTasks(): number {
@@ -96,9 +96,7 @@ export class ProjectDetails implements OnInit {
 
     this.taskService.deleteTask(task.id);
 
-    if (this.project) {
-      this.tasks = this.taskService.getTasksByProjectId(this.project.id);
-    }
+    this.loadProjectTasks();
   }
 
   deleteProject(): void {
@@ -125,5 +123,14 @@ export class ProjectDetails implements OnInit {
     }
 
     this.router.navigate(['/projects']);
+  }
+
+  private loadProjectTasks(): void {
+    if (!this.project) {
+      this.tasks = [];
+      return;
+    }
+
+    this.tasks = this.taskService.getTasksByProjectId(this.project.id);
   }
 }
