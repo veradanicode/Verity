@@ -137,10 +137,14 @@
             <span>*</span>
           </label>
 
-          <input id="dueDate" type="date" formControlName="dueDate" />
+          <input id="dueDate" type="date" formControlName="dueDate" [min]="startDate.value || ''" />
 
           <small class="error" *ngIf="dueDate.touched && dueDate.invalid">
             Due date is required.
+          </small>
+
+          <small class="error" *ngIf="dateRangeError">
+            Due date cannot be earlier than the start date.
           </small>
         </div>
 
