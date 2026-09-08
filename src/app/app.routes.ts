@@ -46,6 +46,10 @@ export const routes: Routes = [
         component: Tasks,
       },
       {
+        path: 'tasks/new',
+        component: TaskForm,
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
