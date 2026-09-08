@@ -25,8 +25,12 @@ export class TaskForm implements OnInit {
 
   isEditMode = false;
   taskId: number | null = null;
+  projects: Project[] = [];
+  isGlobalCreateMode = false;
 
   taskForm = this.fb.group({
+    projectId: [null as number | null, Validators.required],
+
     title: ['', [Validators.required, Validators.minLength(3)]],
 
     description: ['', [Validators.required, Validators.minLength(10)]],
@@ -72,54 +76,91 @@ export class TaskForm implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      const projectId = Number(params.get('id'));
-
-      if (Number.isNaN(projectId)) {
-        return;
-      }
-
-      this.project = this.projectService.getProjectById(projectId);
-
+      const projectIdParam = params.get('id');
       const taskIdParam = params.get('taskId');
 
+      /*
+       * PROJECT CONTEXT
+       * /projects/:id/tasks/new
+       * /projects/:id/tasks/:taskId/edit
+       */
+      if (projectIdParam) {
+        const projectId = Number(projectIdParam);
+
+        if (Number.isNaN(projectId)) return;
+
+        this.project = this.projectService.getProjectById(projectId);
+
+        if (!this.project) return;
+
+        this.taskForm.patchValue({
+          projectId: this.project.id,
+        });
+
+        /*
+         * EDIT MODE
+         */
+        if (taskIdParam) {
+          const taskId = Number(taskIdParam);
+
+          if (Number.isNaN(taskId)) return;
+
+          const task = this.taskService.getTaskById(taskId);
+
+          if (!task) return;
+
+          this.isEditMode = true;
+          this.taskId = taskId;
+
+          this.taskForm.patchValue({
+            title: task.title,
+            description: task.description,
+            assignee: task.assignee,
+            priority: task.priority,
+            status: task.status,
+            dueDate: this.formatDateForInput(task.dueDate),
+          });
+        }
+
+        return;
+      }
+
+      /*
+       * GLOBAL CREATE MODE
+       * /tasks/new
+       */
       if (!taskIdParam) {
-        return;
+        this.isGlobalCreateMode = true;
+        this.projects = this.projectService.getProjects();
       }
-
-      const taskId = Number(taskIdParam);
-
-      if (Number.isNaN(taskId)) {
-        return;
-      }
-
-      const task = this.taskService.getTaskById(taskId);
-
-      if (!task) {
-        return;
-      }
-
-      this.isEditMode = true;
-      this.taskId = taskId;
-
-      this.taskForm.patchValue({
-        title: task.title,
-        description: task.description,
-        assignee: task.assignee,
-        priority: task.priority,
-        status: task.status,
-        dueDate: this.formatDateForInput(task.dueDate),
-      });
     });
   }
 
   submit(): void {
-    if (this.taskForm.invalid || !this.project) {
+    if (this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
       return;
     }
 
     const formValue = this.taskForm.getRawValue();
 
+    /*
+     * Determine which project this task belongs to.
+     */
+    const selectedProjectId = Number(formValue.projectId);
+
+    const selectedProject = this.projectService.getProjectById(selectedProjectId);
+
+    if (!selectedProject) {
+      this.taskForm.markAllAsTouched();
+      return;
+    }
+
+    this.project = selectedProject;
+
+    /*
+     * EDIT EXISTING TASK
+     */
     if (this.isEditMode && this.taskId !== null) {
       this.taskService.updateTask(this.taskId, {
         title: formValue.title!,
@@ -135,6 +176,9 @@ export class TaskForm implements OnInit {
       return;
     }
 
+    /*
+     * CREATE NEW TASK
+     */
     const assigneeInitials = this.getInitials(formValue.assignee!);
 
     this.taskService.createTask({
