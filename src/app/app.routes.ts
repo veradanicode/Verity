@@ -24,9 +24,14 @@ export const routes: Routes = [
         component: ProjectForm,
       },
       {
+        path: 'projects/:id/edit',
+        component: ProjectForm,
+      },
+      {
         path: 'projects/:id',
         component: ProjectDetails,
       },
+
       {
         path: 'tasks',
         component: Tasks,
