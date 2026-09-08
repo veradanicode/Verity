@@ -225,4 +225,31 @@ export class TaskService {
 
     return newTask;
   }
+
+  updateTask(
+    id: number,
+    data: {
+      title: string;
+      description: string;
+      assignee: string;
+      priority: TaskPriority;
+      status: TaskStatus;
+      dueDate: string;
+    },
+  ): Task | undefined {
+    const task = this.tasks.find((task) => task.id === id);
+
+    if (!task) {
+      return undefined;
+    }
+
+    task.title = data.title;
+    task.description = data.description;
+    task.assignee = data.assignee;
+    task.priority = data.priority;
+    task.status = data.status;
+    task.dueDate = data.dueDate;
+
+    return task;
+  }
 }
