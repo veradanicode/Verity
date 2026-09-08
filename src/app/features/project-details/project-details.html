@@ -52,6 +52,9 @@
         <a [routerLink]="['/projects', project.id, 'tasks', 'new']" class="primary-button">
           Add task
         </a>
+        <button type="button" class="danger-button" (click)="deleteProject()">
+          Delete project
+        </button>
       </div>
     </header>
 
