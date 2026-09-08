@@ -359,38 +359,4 @@ export class ProjectService {
 
     return project;
   }
-
-  createTask(data: {
-    title: string;
-    description: string;
-    projectId: number;
-    projectName: string;
-    assignee: string;
-    assigneeInitials: string;
-    status: TaskStatus;
-    priority: TaskPriority;
-    dueDate: string;
-  }): Task {
-    const newTask: Task = {
-      id: this.tasks.length + 1,
-      title: data.title,
-      description: data.description,
-      projectId: data.projectId,
-      projectName: data.projectName,
-      assignee: data.assignee,
-      assigneeInitials: data.assigneeInitials,
-      status: data.status,
-      priority: data.priority,
-      dueDate: data.dueDate,
-      createdDate: new Date().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }),
-    };
-
-    this.tasks.push(newTask);
-
-    return newTask;
-  }
 }
