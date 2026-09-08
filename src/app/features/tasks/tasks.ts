@@ -79,4 +79,16 @@ export class Tasks implements OnInit {
 
     this.taskService.updateTaskStatus(task.id, newStatus);
   }
+
+  deleteTask(task: Task): void {
+    const confirmed = window.confirm(`Are you sure you want to delete "${task.title}"?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.taskService.deleteTask(task.id);
+
+    this.tasks = this.taskService.getTasks();
+  }
 }
