@@ -5,6 +5,7 @@ import { Projects } from './features/projects/projects';
 import { ProjectDetails } from './features/project-details/project-details';
 import { Tasks } from './features/tasks/tasks';
 import { ProjectForm } from './features/project-form/project-form';
+import { TaskForm } from './features/task-form/task-form';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,10 @@ export const routes: Routes = [
       {
         path: 'projects/new',
         component: ProjectForm,
+      },
+      {
+        path: 'projects/:id/tasks/new',
+        component: TaskForm,
       },
       {
         path: 'projects/:id/edit',
