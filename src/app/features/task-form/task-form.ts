@@ -23,6 +23,9 @@ export class TaskForm implements OnInit {
 
   project: Project | undefined;
 
+  isEditMode = false;
+  taskId: number | null = null;
+
   taskForm = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
 
@@ -36,6 +39,20 @@ export class TaskForm implements OnInit {
 
     dueDate: ['', Validators.required],
   });
+
+  get pageTitle(): string {
+    return this.isEditMode ? 'Edit Task' : 'Create New Task';
+  }
+
+  get pageDescription(): string {
+    return this.isEditMode
+      ? 'Update the information and details for this task.'
+      : 'Add a task to your project.';
+  }
+
+  get submitButtonText(): string {
+    return this.isEditMode ? 'Save Changes' : 'Create Task';
+  }
 
   get title() {
     return this.taskForm.controls.title;
@@ -55,13 +72,43 @@ export class TaskForm implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      const id = Number(params.get('id'));
+      const projectId = Number(params.get('id'));
 
-      if (Number.isNaN(id)) {
+      if (Number.isNaN(projectId)) {
         return;
       }
 
-      this.project = this.projectService.getProjectById(id);
+      this.project = this.projectService.getProjectById(projectId);
+
+      const taskIdParam = params.get('taskId');
+
+      if (!taskIdParam) {
+        return;
+      }
+
+      const taskId = Number(taskIdParam);
+
+      if (Number.isNaN(taskId)) {
+        return;
+      }
+
+      const task = this.taskService.getTaskById(taskId);
+
+      if (!task) {
+        return;
+      }
+
+      this.isEditMode = true;
+      this.taskId = taskId;
+
+      this.taskForm.patchValue({
+        title: task.title,
+        description: task.description,
+        assignee: task.assignee,
+        priority: task.priority,
+        status: task.status,
+        dueDate: this.formatDateForInput(task.dueDate),
+      });
     });
   }
 
@@ -72,6 +119,21 @@ export class TaskForm implements OnInit {
     }
 
     const formValue = this.taskForm.getRawValue();
+
+    if (this.isEditMode && this.taskId !== null) {
+      this.taskService.updateTask(this.taskId, {
+        title: formValue.title!,
+        description: formValue.description!,
+        assignee: formValue.assignee!,
+        priority: formValue.priority as TaskPriority,
+        status: formValue.status as TaskStatus,
+        dueDate: formValue.dueDate!,
+      });
+
+      this.router.navigate(['/projects', this.project.id]);
+
+      return;
+    }
 
     const assigneeInitials = this.getInitials(formValue.assignee!);
 
@@ -98,5 +160,21 @@ export class TaskForm implements OnInit {
       .join('')
       .substring(0, 2)
       .toUpperCase();
+  }
+
+  private formatDateForInput(date: string): string {
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return date;
+    }
+
+    const year = parsedDate.getFullYear();
+
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+
+    const day = String(parsedDate.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }
