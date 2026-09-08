@@ -134,6 +134,16 @@
       <span class="status" [class]="getStatusClass(task.status)">
         {{ task.status }}
       </span>
+
+      <!-- Edit -->
+      <a
+        [routerLink]="['/projects', task.projectId, 'tasks', task.id, 'edit']"
+        class="task-edit-link"
+      >
+        Edit
+      </a>
+      <!-- Delete -->
+      <button type="button" class="task-delete-link" (click)="deleteTask(task)">Delete</button>
     </article>
   </div>
 
