@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { Project, ProjectService } from '../../core/services/project';
 
@@ -20,6 +20,7 @@ export class ProjectDetails implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private projectService: ProjectService,
     private taskService: TaskService,
   ) {}
@@ -98,5 +99,25 @@ export class ProjectDetails implements OnInit {
     if (this.project) {
       this.tasks = this.taskService.getTasksByProjectId(this.project.id);
     }
+  }
+
+  deleteProject(): void {
+    if (!this.project) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Are you sure you want to delete "${this.project.name}"?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    const deleted = this.projectService.deleteProject(this.project.id);
+
+    if (!deleted) {
+      return;
+    }
+
+    this.router.navigate(['/projects']);
   }
 }
