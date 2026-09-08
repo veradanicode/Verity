@@ -204,7 +204,7 @@ export class TaskService {
     dueDate: string;
   }): Task {
     const newTask: Task = {
-      id: this.tasks.length + 1,
+      id: this.tasks.length === 0 ? 1 : Math.max(...this.tasks.map((task) => task.id)) + 1,
       title: data.title,
       description: data.description,
       projectId: data.projectId,
