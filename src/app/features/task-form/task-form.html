@@ -98,6 +98,27 @@
 
       <div class="form-grid">
         <div class="form-field">
+          <div class="form-field" *ngIf="isGlobalCreateMode">
+            <label for="projectId">
+              Project
+              <span>*</span>
+            </label>
+
+            <select id="projectId" formControlName="projectId">
+              <option [ngValue]="null">Select a project</option>
+
+              <option *ngFor="let project of projects" [ngValue]="project.id">
+                {{ project.name }}
+              </option>
+            </select>
+
+            <small
+              class="error"
+              *ngIf="taskForm.controls.projectId.touched && taskForm.controls.projectId.invalid"
+            >
+              Project is required.
+            </small>
+          </div>
           <label for="assignee">
             Assignee
             <span>*</span>
