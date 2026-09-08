@@ -45,7 +45,9 @@
       </div>
 
       <div class="header-actions">
-        <button class="secondary-button">Edit project</button>
+        <a [routerLink]="['/projects', project.id, 'edit']" class="secondary-button">
+          Edit project
+        </a>
 
         <button class="primary-button">+ Add task</button>
       </div>
