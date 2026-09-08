@@ -359,4 +359,16 @@ export class ProjectService {
 
     return project;
   }
+
+  deleteProject(id: number): boolean {
+    const projectIndex = this.projects.findIndex((project) => project.id === id);
+
+    if (projectIndex === -1) {
+      return false;
+    }
+
+    this.projects.splice(projectIndex, 1);
+
+    return true;
+  }
 }
