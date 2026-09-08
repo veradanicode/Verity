@@ -5,9 +5,11 @@
 
       <span class="eyebrow">PROJECTS</span>
 
-      <h1>Create New Project</h1>
+      <h1>{{ pageTitle }}</h1>
 
-      <p>Add the essential information needed to create a new project.</p>
+      <p>
+        {{ pageDescription }}
+      </p>
     </div>
   </div>
 
@@ -168,7 +170,9 @@
     <div class="form-actions">
       <a routerLink="/projects" class="cancel-button"> Cancel </a>
 
-      <button type="submit" class="primary-button">Create Project</button>
+      <button type="submit" class="primary-button">
+        {{ submitButtonText }}
+      </button>
     </div>
   </form>
 </div>
