@@ -791,6 +791,33 @@
   outline-offset: 2px;
 }
 
+.task-delete-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--coral);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.task-delete-link:hover {
+  background: var(--coral-tint);
+}
+
+.task-delete-link:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
 @media (max-width: 700px) {
   .section-heading {
     align-items: flex-start;
