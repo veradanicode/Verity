@@ -85,4 +85,18 @@ export class ProjectDetails implements OnInit {
 
     return Math.round((this.project.spent / this.project.budget) * 100);
   }
+
+  deleteTask(task: Task): void {
+    const confirmed = window.confirm(`Are you sure you want to delete "${task.title}"?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.taskService.deleteTask(task.id);
+
+    if (this.project) {
+      this.tasks = this.taskService.getTasksByProjectId(this.project.id);
+    }
+  }
 }
