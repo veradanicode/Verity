@@ -1,1 +1,170 @@
-<p>task-form works!</p>
+<div class="task-form-page">
+  <div class="page-head">
+    <div>
+      <a [routerLink]="project ? ['/projects', project.id] : ['/projects']" class="back-link">
+        ← Back to project
+      </a>
+
+      <span class="eyebrow">TASKS</span>
+
+      <h1>Create New Task</h1>
+
+      <p *ngIf="project">
+        Add a task to
+        <strong>{{ project.name }}</strong
+        >.
+      </p>
+
+      <p *ngIf="!project">Create a task for your project.</p>
+    </div>
+  </div>
+
+  <form class="task-form" [formGroup]="taskForm" (ngSubmit)="submit()">
+    <!-- BASIC INFORMATION -->
+
+    <section class="form-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">01</span>
+
+          <h2>Task Information</h2>
+
+          <p>Describe what needs to be completed.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field full-width">
+          <label for="title">
+            Task title
+            <span>*</span>
+          </label>
+
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            placeholder="e.g. Approve homepage wireframes"
+          />
+
+          <small class="error" *ngIf="title.touched && title.invalid">
+            <span *ngIf="title.errors?.['required']"> Task title is required. </span>
+
+            <span *ngIf="title.errors?.['minlength']">
+              Task title must be at least 3 characters.
+            </span>
+          </small>
+        </div>
+
+        <div class="form-field full-width">
+          <label for="description">
+            Description
+            <span>*</span>
+          </label>
+
+          <textarea
+            id="description"
+            rows="5"
+            formControlName="description"
+            placeholder="Describe what needs to be done..."
+          ></textarea>
+
+          <small class="error" *ngIf="description.touched && description.invalid">
+            <span *ngIf="description.errors?.['required']"> Task description is required. </span>
+
+            <span *ngIf="description.errors?.['minlength']">
+              Description must be at least 10 characters.
+            </span>
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK DETAILS -->
+
+    <section class="form-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">02</span>
+
+          <h2>Task Details</h2>
+
+          <p>Set ownership, priority and deadline.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="assignee">
+            Assignee
+            <span>*</span>
+          </label>
+
+          <input
+            id="assignee"
+            type="text"
+            formControlName="assignee"
+            placeholder="e.g. Amara Kelo"
+          />
+
+          <small class="error" *ngIf="assignee.touched && assignee.invalid">
+            Assignee is required.
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="priority">
+            Priority
+            <span>*</span>
+          </label>
+
+          <select id="priority" formControlName="priority">
+            <option value="High">High</option>
+
+            <option value="Medium">Medium</option>
+
+            <option value="Low">Low</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="status">
+            Status
+            <span>*</span>
+          </label>
+
+          <select id="status" formControlName="status">
+            <option value="Pending">Pending</option>
+
+            <option value="In Progress">In Progress</option>
+
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="dueDate">
+            Due date
+            <span>*</span>
+          </label>
+
+          <input id="dueDate" type="date" formControlName="dueDate" />
+
+          <small class="error" *ngIf="dueDate.touched && dueDate.invalid">
+            Due date is required.
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIONS -->
+
+    <div class="form-actions">
+      <a [routerLink]="project ? ['/projects', project.id] : ['/projects']" class="cancel-button">
+        Cancel
+      </a>
+
+      <button type="submit" class="primary-button">Create Task</button>
+    </div>
+  </form>
+</div>
