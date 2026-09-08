@@ -29,14 +29,22 @@ export class ProjectDetails implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
 
+      console.log('Project ID from URL:', id);
+
       this.project = this.projectService.getProjectById(id);
+
+      console.log('Project:', this.project);
 
       if (!this.project) {
         this.tasks = [];
         return;
       }
 
-      this.loadProjectTasks();
+      this.tasks = this.taskService.getTasksByProjectId(this.project.id);
+
+      console.log('Project ID:', this.project.id);
+      console.log('Tasks for this project:', this.tasks);
+      console.log('ALL TASKS:', this.taskService.getTasks());
     });
   }
 

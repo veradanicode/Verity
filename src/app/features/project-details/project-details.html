@@ -242,6 +242,8 @@
 
     <!-- RISKS -->
 
+    <!-- RISKS -->
+
     <section class="details-card risks-card" *ngIf="project.risks.length > 0">
       <div class="section-heading">
         <div>
@@ -260,74 +262,76 @@
           </span>
         </div>
       </div>
-      <section class="details-card tasks-card">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">WORK</span>
-            <h2>Project Tasks</h2>
-            <p>{{ completedTasks }} of {{ tasks.length }} tasks completed</p>
-          </div>
+    </section>
 
-          <span class="task-progress"> {{ taskCompletionRate }}% </span>
+    <section class="details-card tasks-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">WORK</span>
+
+          <h2>Project Tasks</h2>
+
+          <p>{{ completedTasks }} of {{ tasks.length }} tasks completed</p>
         </div>
 
-        <div class="task-list" *ngIf="tasks.length > 0">
-          <article class="project-task" *ngFor="let task of tasks">
-            <button
-              class="task-checkbox"
-              [class.completed]="task.status === 'Completed'"
-              (click)="toggleTask(task)"
-              [attr.aria-label]="
-                task.status === 'Completed' ? 'Mark task as pending' : 'Mark task as completed'
-              "
-            >
-              <span *ngIf="task.status === 'Completed'"> ✓ </span>
-            </button>
+        <span class="task-progress"> {{ taskCompletionRate }}% </span>
+      </div>
+      <div class="task-list" *ngIf="tasks.length > 0">
+        <article class="project-task" *ngFor="let task of tasks">
+          <button
+            class="task-checkbox"
+            [class.completed]="task.status === 'Completed'"
+            (click)="toggleTask(task)"
+            [attr.aria-label]="
+              task.status === 'Completed' ? 'Mark task as pending' : 'Mark task as completed'
+            "
+          >
+            <span *ngIf="task.status === 'Completed'"> ✓ </span>
+          </button>
 
-            <div class="task-main">
-              <div class="task-title-row">
-                <h3 [class.task-done]="task.status === 'Completed'">
-                  {{ task.title }}
-                </h3>
+          <div class="task-main">
+            <div class="task-title-row">
+              <h3 [class.task-done]="task.status === 'Completed'">
+                {{ task.title }}
+              </h3>
 
-                <span class="priority" [class]="getPriorityClass(task.priority)">
-                  {{ task.priority }}
-                </span>
-              </div>
-
-              <p>
-                {{ task.description }}
-              </p>
-
-              <div class="task-meta">
-                <span> Due {{ task.dueDate }} </span>
-
-                <span>
-                  {{ task.assignee }}
-                </span>
-
-                <span class="task-status" [class]="getTaskStatusClass(task.status)">
-                  {{ task.status }}
-                </span>
-                <a
-                  [routerLink]="['/projects', project.id, 'tasks', task.id, 'edit']"
-                  class="task-edit-link"
-                >
-                  Edit
-                </a>
-                <button type="button" class="task-delete-link" (click)="deleteTask(task)">
-                  Delete
-                </button>
-              </div>
+              <span class="priority" [class]="getPriorityClass(task.priority)">
+                {{ task.priority }}
+              </span>
             </div>
-          </article>
-        </div>
 
-        <div class="empty-state" *ngIf="tasks.length === 0">
-          <h3>No tasks yet</h3>
-          <p>Tasks assigned to this project will appear here.</p>
-        </div>
-      </section>
+            <p>
+              {{ task.description }}
+            </p>
+
+            <div class="task-meta">
+              <span> Due {{ task.dueDate }} </span>
+
+              <span>
+                {{ task.assignee }}
+              </span>
+
+              <span class="task-status" [class]="getTaskStatusClass(task.status)">
+                {{ task.status }}
+              </span>
+              <a
+                [routerLink]="['/projects', project.id, 'tasks', task.id, 'edit']"
+                class="task-edit-link"
+              >
+                Edit
+              </a>
+              <button type="button" class="task-delete-link" (click)="deleteTask(task)">
+                Delete
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="empty-state" *ngIf="tasks.length === 0">
+        <h3>No tasks yet</h3>
+        <p>Tasks assigned to this project will appear here.</p>
+      </div>
     </section>
   </ng-container>
 
