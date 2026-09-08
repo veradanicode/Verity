@@ -49,7 +49,9 @@
           Edit project
         </a>
 
-        <button class="primary-button">+ Add task</button>
+        <a [routerLink]="['/projects', project.id, 'tasks', 'new']" class="primary-button">
+          Add task
+        </a>
       </div>
     </header>
 
