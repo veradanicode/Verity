@@ -74,29 +74,44 @@ p {
   font-size: 14.5px;
 }
 
-.btn-primary {
-  display: flex;
+.new-project-btn {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  background: var(--coral);
-  color: #fff;
-  border: none;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
   border-radius: 10px;
-  padding: 11px 18px;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 14px;
+  background: var(--coral);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
-.btn-primary:hover {
-  background: #ec4a29;
+.new-project-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-.btn-primary svg {
-  width: 16px;
-  height: 16px;
+.new-project-btn:active {
+  transform: translateY(0);
+}
+
+.new-project-btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.new-project-btn span {
+  font-size: 18px;
+  margin-right: 6px;
 }
 
 /* ---------- Stat cards ---------- */

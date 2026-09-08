@@ -127,17 +127,10 @@
       <h1>Good morning, {{ userName }}</h1>
       <p>{{ todayLabel }} — here's where things stand today.</p>
     </div>
-    <button class="btn-primary" type="button">
-      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path
-          d="M10 4v12M4 10h12"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-        />
-      </svg>
+    <a routerLink="/projects/new" class="new-project-btn">
+      <span>+</span>
       New project
-    </button>
+    </a>
   </section>
 
   <!-- Stat cards -->
