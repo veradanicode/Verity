@@ -252,4 +252,16 @@ export class TaskService {
 
     return task;
   }
+
+  deleteTask(id: number): boolean {
+    const taskIndex = this.tasks.findIndex((task) => task.id === id);
+
+    if (taskIndex === -1) {
+      return false;
+    }
+
+    this.tasks.splice(taskIndex, 1);
+
+    return true;
+  }
 }
