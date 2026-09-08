@@ -106,13 +106,19 @@ export class ProjectDetails implements OnInit {
       return;
     }
 
-    const confirmed = window.confirm(`Are you sure you want to delete "${this.project.name}"?`);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${this.project.name}"? This will also delete all tasks belonging to this project.`,
+    );
 
     if (!confirmed) {
       return;
     }
 
-    const deleted = this.projectService.deleteProject(this.project.id);
+    const projectId = this.project.id;
+
+    this.taskService.deleteTasksByProjectId(projectId);
+
+    const deleted = this.projectService.deleteProject(projectId);
 
     if (!deleted) {
       return;
