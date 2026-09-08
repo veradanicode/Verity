@@ -1,5 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
+import { Project, ProjectService } from '../../core/services/project';
+
+import { Task, TaskService } from '../../core/services/task';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 interface StatCard {
   label: string;
@@ -45,121 +52,136 @@ interface CalendarDay {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [RouterLink, FormsModule, CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
+  private projectService: ProjectService;
+  private taskService: TaskService;
+
+  constructor(projectService: ProjectService, taskService: TaskService) {
+    this.projectService = projectService;
+    this.taskService = taskService;
+  }
+
+  projects: ProjectRow[] = [];
+  tasks: TaskRow[] = [];
+  stats: StatCard[] = [];
+
+  ngOnInit(): void {
+    const projects = this.projectService.getProjects();
+
+    const tasks = this.taskService.getTasks();
+
+    this.projects = projects
+      .filter((project) => project.status !== 'Completed')
+      .slice(0, 4)
+      .map((project) => ({
+        name: project.name,
+        client: project.client,
+        progress: this.getProjectProgress(project.id),
+        dueLabel: `Due ${this.formatDueDate(project.dueDate)}`,
+        status: project.status === 'Completed' ? 'On track' : project.status,
+        initials: project.team.slice(0, 4).map((member) => member.initials),
+      }));
+
+    this.tasks = tasks.slice(0, 5).map((task) => ({
+      title: task.title,
+      project: task.projectName,
+      due: this.formatTaskDueDate(task.dueDate),
+      priority: task.priority,
+      done: task.status === 'Completed',
+    }));
+
+    this.stats = [
+      {
+        label: 'Total Projects',
+        value: projects.length,
+        delta: 'Current projects',
+        deltaTone: 'up',
+        accent: 'teal',
+        icon: 'folder',
+      },
+      {
+        label: 'Active Projects',
+        value: projects.filter((project) => project.status !== 'Completed').length,
+        delta: 'Currently active',
+        deltaTone: 'flat',
+        accent: 'coral',
+        icon: 'bolt',
+      },
+      {
+        label: 'Pending Tasks',
+        value: tasks.filter((task) => task.status !== 'Completed').length,
+        delta: 'Need attention',
+        deltaTone: 'down',
+        accent: 'amber',
+        icon: 'clock',
+      },
+      {
+        label: 'Completed Tasks',
+        value: tasks.filter((task) => task.status === 'Completed').length,
+        delta: 'Completed',
+        deltaTone: 'up',
+        accent: 'green',
+        icon: 'check',
+      },
+    ];
+  }
+  getProjectProgress(projectId: number): number {
+    const tasks = this.taskService.getTasksByProjectId(projectId);
+
+    if (tasks.length === 0) {
+      return 0;
+    }
+
+    const completed = tasks.filter((task) => task.status === 'Completed').length;
+
+    return Math.round((completed / tasks.length) * 100);
+  }
+
+  formatDueDate(date: string): string {
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return date;
+    }
+
+    return parsedDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+
+  formatTaskDueDate(date: string): string {
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return date;
+    }
+
+    const today = new Date();
+
+    if (parsedDate.toDateString() === today.toDateString()) {
+      return 'Today';
+    }
+
+    const tomorrow = new Date(today);
+
+    tomorrow.setDate(today.getDate() + 1);
+
+    if (parsedDate.toDateString() === tomorrow.toDateString()) {
+      return 'Tomorrow';
+    }
+
+    return parsedDate.toLocaleDateString('en-US', {
+      weekday: 'short',
+    });
+  }
+
   userName = 'Amara';
   todayLabel = 'Monday, 7 September';
-
-  stats: StatCard[] = [
-    {
-      label: 'Total Projects',
-      value: 24,
-      delta: '3 started this month',
-      deltaTone: 'up',
-      accent: 'teal',
-      icon: 'folder',
-    },
-    {
-      label: 'Active Projects',
-      value: 9,
-      delta: '5 due this week',
-      deltaTone: 'flat',
-      accent: 'coral',
-      icon: 'bolt',
-    },
-    {
-      label: 'Pending Tasks',
-      value: 37,
-      delta: '12 need review',
-      deltaTone: 'down',
-      accent: 'amber',
-      icon: 'clock',
-    },
-    {
-      label: 'Completed Tasks',
-      value: 128,
-      delta: '18 finished this week',
-      deltaTone: 'up',
-      accent: 'green',
-      icon: 'check',
-    },
-  ];
-
-  projects: ProjectRow[] = [
-    {
-      name: 'Riverside Rebrand',
-      client: 'Marketing',
-      progress: 72,
-      dueLabel: 'Due Sep 12',
-      status: 'On track',
-      initials: ['AK', 'TN', 'JO'],
-    },
-    {
-      name: 'Mobile App v2',
-      client: 'Product',
-      progress: 41,
-      dueLabel: 'Due Sep 19',
-      status: 'At risk',
-      initials: ['LM', 'PS'],
-    },
-    {
-      name: 'Client Portal',
-      client: 'Engineering',
-      progress: 88,
-      dueLabel: 'Due Sep 9',
-      status: 'On track',
-      initials: ['RT', 'CN', 'BD', 'AK'],
-    },
-    {
-      name: 'Q3 Finance Review',
-      client: 'Operations',
-      progress: 15,
-      dueLabel: 'Due Sep 30',
-      status: 'Behind',
-      initials: ['MJ'],
-    },
-  ];
-
-  tasks: TaskRow[] = [
-    {
-      title: 'Approve homepage wireframes',
-      project: 'Riverside Rebrand',
-      due: 'Today',
-      priority: 'High',
-      done: false,
-    },
-    {
-      title: 'Write release notes',
-      project: 'Mobile App v2',
-      due: 'Today',
-      priority: 'Medium',
-      done: false,
-    },
-    {
-      title: 'Review contractor invoice',
-      project: 'Q3 Finance Review',
-      due: 'Tomorrow',
-      priority: 'Low',
-      done: false,
-    },
-    {
-      title: 'Sync with design on icons',
-      project: 'Client Portal',
-      due: 'Wed',
-      priority: 'Medium',
-      done: true,
-    },
-    {
-      title: 'Prep sprint demo',
-      project: 'Mobile App v2',
-      due: 'Thu',
-      priority: 'High',
-      done: false,
-    },
-  ];
 
   team: TeamMember[] = [
     { name: 'Amara Kelo', role: 'Project Lead', initials: 'AK', online: true },
@@ -180,11 +202,28 @@ export class Dashboard {
   ];
 
   get completionRate(): number {
-    const done = this.tasks.filter((t) => t.done).length;
+    if (this.tasks.length === 0) {
+      return 0;
+    }
+
+    const done = this.tasks.filter((task) => task.done).length;
+
     return Math.round((done / this.tasks.length) * 100);
   }
 
   toggleTask(task: TaskRow): void {
-    task.done = !task.done;
+    const serviceTask = this.taskService
+      .getTasks()
+      .find((item) => item.title === task.title && item.projectName === task.project);
+
+    if (!serviceTask) {
+      return;
+    }
+
+    const newStatus = serviceTask.status === 'Completed' ? 'Pending' : 'Completed';
+
+    this.taskService.updateTaskStatus(serviceTask.id, newStatus);
+
+    task.done = newStatus === 'Completed';
   }
 }
