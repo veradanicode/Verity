@@ -264,4 +264,8 @@ export class TaskService {
 
     return true;
   }
+
+  deleteTasksByProjectId(projectId: number): void {
+    this.tasks = this.tasks.filter((task) => task.projectId !== projectId);
+  }
 }
