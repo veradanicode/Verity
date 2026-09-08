@@ -1,6 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { Project, ProjectService } from '../../core/services/project';
@@ -18,23 +25,45 @@ export class ProjectForm implements OnInit {
   private route = inject(ActivatedRoute);
   private projectService = inject(ProjectService);
 
-  projectForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
+  private dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const startDate = control.get('startDate')?.value;
+    const dueDate = control.get('dueDate')?.value;
 
-    client: ['', Validators.required],
+    if (!startDate || !dueDate) {
+      return null;
+    }
 
-    description: ['', [Validators.required, Validators.minLength(20)]],
+    if (dueDate < startDate) {
+      return {
+        dateRange: true,
+      };
+    }
 
-    priority: ['Medium', Validators.required],
+    return null;
+  };
 
-    startDate: ['', Validators.required],
+  projectForm = this.fb.group(
+    {
+      name: ['', [Validators.required, Validators.minLength(3)]],
 
-    dueDate: ['', Validators.required],
+      client: ['', Validators.required],
 
-    owner: ['', Validators.required],
+      description: ['', [Validators.required, Validators.minLength(20)]],
 
-    budget: [0, [Validators.required, Validators.min(1)]],
-  });
+      priority: ['Medium', Validators.required],
+
+      startDate: ['', Validators.required],
+
+      dueDate: ['', Validators.required],
+
+      owner: ['', Validators.required],
+
+      budget: [0, [Validators.required, Validators.min(1)]],
+    },
+    {
+      validators: this.dateRangeValidator,
+    },
+  );
 
   isEditMode = false;
   projectId: number | null = null;
@@ -71,6 +100,12 @@ export class ProjectForm implements OnInit {
 
   get dueDate() {
     return this.projectForm.controls.dueDate;
+  }
+
+  get dateRangeError(): boolean {
+    return (
+      this.projectForm.hasError('dateRange') && (this.startDate.touched || this.dueDate.touched)
+    );
   }
 
   get owner() {
