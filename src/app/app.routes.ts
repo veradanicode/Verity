@@ -17,6 +17,10 @@ export const routes: Routes = [
         component: Dashboard,
       },
       {
+        path: 'dashboard/projects/new',
+        component: ProjectForm,
+      },
+      {
         path: 'projects',
         component: Projects,
       },
