@@ -306,6 +306,12 @@
                 <span class="task-status" [class]="getTaskStatusClass(task.status)">
                   {{ task.status }}
                 </span>
+                <a
+                  [routerLink]="['/projects', project.id, 'tasks', task.id, 'edit']"
+                  class="task-edit-link"
+                >
+                  Edit
+                </a>
               </div>
             </div>
           </article>
