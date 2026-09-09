@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -12,8 +13,9 @@ import { Task, TaskPriority, TaskService, TaskStatus } from '../../core/services
   templateUrl: './tasks.html',
   styleUrl: './tasks.css',
 })
-export class Tasks implements OnInit {
+export class Tasks implements OnInit, OnDestroy {
   tasks: Task[] = [];
+  private tasksSubscription?: Subscription;
 
   searchTerm = '';
 
@@ -25,8 +27,14 @@ export class Tasks implements OnInit {
 
   constructor(private taskService: TaskService) {}
 
+  ngOnDestroy(): void {
+    this.tasksSubscription?.unsubscribe();
+  }
+
   ngOnInit(): void {
-    this.tasks = this.taskService.getTasks();
+    this.tasksSubscription = this.taskService.tasks$.subscribe((tasks) => {
+      this.tasks = tasks;
+    });
   }
 
   get projects(): string[] {
@@ -88,7 +96,5 @@ export class Tasks implements OnInit {
     }
 
     this.taskService.deleteTask(task.id);
-
-    this.tasks = this.taskService.getTasks();
   }
 }
