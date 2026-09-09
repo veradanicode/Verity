@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export type TaskStatus = 'Pending' | 'In Progress' | 'Completed';
 
@@ -172,6 +173,10 @@ export class TaskService {
     },
   ];
 
+  private tasksSubject = new BehaviorSubject<Task[]>(this.tasks);
+
+  tasks$ = this.tasksSubject.asObservable();
+
   getTasks(): Task[] {
     return this.tasks;
   }
@@ -189,6 +194,7 @@ export class TaskService {
 
     if (task) {
       task.status = status;
+      this.notifyTasksChanged();
     }
   }
 
@@ -222,6 +228,7 @@ export class TaskService {
     };
 
     this.tasks.push(newTask);
+    this.notifyTasksChanged();
 
     return newTask;
   }
@@ -250,6 +257,7 @@ export class TaskService {
     task.status = data.status;
     task.dueDate = data.dueDate;
 
+    this.notifyTasksChanged();
     return task;
   }
 
@@ -261,11 +269,18 @@ export class TaskService {
     }
 
     this.tasks.splice(taskIndex, 1);
+    this.notifyTasksChanged();
 
     return true;
   }
 
   deleteTasksByProjectId(projectId: number): void {
     this.tasks = this.tasks.filter((task) => task.projectId !== projectId);
+
+    this.notifyTasksChanged();
+  }
+
+  private notifyTasksChanged(): void {
+    this.tasksSubject.next(this.tasks);
   }
 }
