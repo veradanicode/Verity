@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { Project, ProjectService } from '../../core/services/project';
-
+import { Subscription } from 'rxjs';
 import { Task, TaskService } from '../../core/services/task';
 
 @Component({
@@ -17,6 +17,7 @@ export class ProjectDetails implements OnInit {
   project: Project | undefined;
 
   tasks: Task[] = [];
+  private tasksSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,12 +41,18 @@ export class ProjectDetails implements OnInit {
         return;
       }
 
-      this.tasks = this.taskService.getTasksByProjectId(this.project.id);
+      this.tasksSubscription?.unsubscribe();
+
+      this.tasksSubscription = this.taskService.tasks$.subscribe((tasks) => {
+        this.tasks = tasks.filter((task) => task.projectId === this.project!.id);
+      });
 
       console.log('Project ID:', this.project.id);
-      console.log('Tasks for this project:', this.tasks);
-      console.log('ALL TASKS:', this.taskService.getTasks());
     });
+  }
+
+  ngOnDestroy(): void {
+    this.tasksSubscription?.unsubscribe();
   }
 
   getStatusClass(status: Project['status']): string {
@@ -64,8 +71,6 @@ export class ProjectDetails implements OnInit {
     const newStatus = task.status === 'Completed' ? 'Pending' : 'Completed';
 
     this.taskService.updateTaskStatus(task.id, newStatus);
-
-    this.loadProjectTasks();
   }
 
   get completedTasks(): number {
@@ -103,8 +108,6 @@ export class ProjectDetails implements OnInit {
     }
 
     this.taskService.deleteTask(task.id);
-
-    this.loadProjectTasks();
   }
 
   deleteProject(): void {
@@ -131,14 +134,5 @@ export class ProjectDetails implements OnInit {
     }
 
     this.router.navigate(['/projects']);
-  }
-
-  private loadProjectTasks(): void {
-    if (!this.project) {
-      this.tasks = [];
-      return;
-    }
-
-    this.tasks = this.taskService.getTasksByProjectId(this.project.id);
   }
 }
