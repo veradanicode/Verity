@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Observable, map } from 'rxjs';
 
 import { Project, ProjectService } from '../../core/services/project';
-import { Subscription } from 'rxjs';
 import { Task, TaskService } from '../../core/services/task';
 
 @Component({
@@ -16,8 +16,10 @@ import { Task, TaskService } from '../../core/services/task';
 export class ProjectDetails implements OnInit {
   project: Project | undefined;
 
-  tasks: Task[] = [];
-  private tasksSubscription?: Subscription;
+  tasks$!: Observable<Task[]>;
+  completedTasks$!: Observable<number>;
+  taskCompletionRate$!: Observable<number>;
+  calculatedProgress$!: Observable<number>;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,22 +39,58 @@ export class ProjectDetails implements OnInit {
       console.log('Project:', this.project);
 
       if (!this.project) {
-        this.tasks = [];
+        this.tasks$ = new Observable<Task[]>((subscriber) => {
+          subscriber.next([]);
+          subscriber.complete();
+        });
+
+        this.completedTasks$ = new Observable<number>((subscriber) => {
+          subscriber.next(0);
+          subscriber.complete();
+        });
+
+        this.taskCompletionRate$ = new Observable<number>((subscriber) => {
+          subscriber.next(0);
+          subscriber.complete();
+        });
+
+        this.calculatedProgress$ = this.tasks$.pipe(
+          map((tasks) => {
+            if (tasks.length === 0) {
+              return 0;
+            }
+
+            const completed = tasks.filter((task) => task.status === 'Completed').length;
+
+            return Math.round((completed / tasks.length) * 100);
+          }),
+        );
+
         return;
       }
 
-      this.tasksSubscription?.unsubscribe();
+      this.tasks$ = this.taskService.tasks$.pipe(
+        map((tasks) => tasks.filter((task) => task.projectId === this.project!.id)),
+      );
 
-      this.tasksSubscription = this.taskService.tasks$.subscribe((tasks) => {
-        this.tasks = tasks.filter((task) => task.projectId === this.project!.id);
-      });
+      this.completedTasks$ = this.tasks$.pipe(
+        map((tasks) => tasks.filter((task) => task.status === 'Completed').length),
+      );
+
+      this.taskCompletionRate$ = this.tasks$.pipe(
+        map((tasks) => {
+          if (tasks.length === 0) {
+            return 0;
+          }
+
+          const completed = tasks.filter((task) => task.status === 'Completed').length;
+
+          return Math.round((completed / tasks.length) * 100);
+        }),
+      );
 
       console.log('Project ID:', this.project.id);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.tasksSubscription?.unsubscribe();
   }
 
   getStatusClass(status: Project['status']): string {
@@ -71,25 +109,6 @@ export class ProjectDetails implements OnInit {
     const newStatus = task.status === 'Completed' ? 'Pending' : 'Completed';
 
     this.taskService.updateTaskStatus(task.id, newStatus);
-  }
-
-  get completedTasks(): number {
-    return this.tasks.filter((task) => task.status === 'Completed').length;
-  }
-
-  get taskCompletionRate(): number {
-    if (this.tasks.length === 0) {
-      return 0;
-    }
-
-    return Math.round((this.completedTasks / this.tasks.length) * 100);
-  }
-  get calculatedProgress(): number {
-    if (this.tasks.length === 0) {
-      return 0;
-    }
-
-    return Math.round((this.completedTasks / this.tasks.length) * 100);
   }
 
   get budgetUsedPercentage(): number {

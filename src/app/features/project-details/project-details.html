@@ -122,17 +122,17 @@
           <h2>Project progress</h2>
         </div>
 
-        <strong class="large-value"> {{ calculatedProgress }}% </strong>
+        <strong class="large-value"> {{ calculatedProgress$ | async }}%</strong>
       </div>
 
       <div class="progress-track">
-        <div class="progress-bar" [style.width.%]="calculatedProgress"></div>
+        <div class="progress-bar" [style.width.%]="calculatedProgress$ | async"></div>
       </div>
 
       <div class="progress-footer">
         <span> Project completion </span>
 
-        <strong> {{ calculatedProgress }}% complete </strong>
+        <strong> {{ calculatedProgress$ | async }}% complete </strong>
       </div>
     </section>
 
@@ -271,13 +271,14 @@
 
           <h2>Project Tasks</h2>
 
-          <p>{{ completedTasks }} of {{ tasks.length }} tasks completed</p>
+          <
+          <p>{{ completedTasks$ | async }} of {{ (tasks$ | async)?.length }} tasks completed</p>
         </div>
 
-        <span class="task-progress"> {{ taskCompletionRate }}% </span>
+        <span class="task-progress"> {{ taskCompletionRate$ | async }}% </span>
       </div>
-      <div class="task-list" *ngIf="tasks.length > 0">
-        <article class="project-task" *ngFor="let task of tasks">
+      <div class="task-list" *ngIf="(tasks$ | async)?.length">
+        <article class="project-task" *ngFor="let task of tasks$ | async">
           <button
             class="task-checkbox"
             [class.completed]="task.status === 'Completed'"
@@ -328,7 +329,7 @@
         </article>
       </div>
 
-      <div class="empty-state" *ngIf="tasks.length === 0">
+      <div class="empty-state" *ngIf="(tasks$ | async)?.length === 0">
         <h3>No tasks yet</h3>
         <p>Tasks assigned to this project will appear here.</p>
       </div>
