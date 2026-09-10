@@ -19,7 +19,6 @@ export class ProjectDetails implements OnInit {
   tasks$!: Observable<Task[]>;
   completedTasks$!: Observable<number>;
   taskCompletionRate$!: Observable<number>;
-  calculatedProgress$!: Observable<number>;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,18 +52,6 @@ export class ProjectDetails implements OnInit {
           subscriber.next(0);
           subscriber.complete();
         });
-
-        this.calculatedProgress$ = this.tasks$.pipe(
-          map((tasks) => {
-            if (tasks.length === 0) {
-              return 0;
-            }
-
-            const completed = tasks.filter((task) => task.status === 'Completed').length;
-
-            return Math.round((completed / tasks.length) * 100);
-          }),
-        );
 
         return;
       }

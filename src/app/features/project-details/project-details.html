@@ -122,17 +122,17 @@
           <h2>Project progress</h2>
         </div>
 
-        <strong class="large-value"> {{ calculatedProgress$ | async }}%</strong>
+        <strong class="large-value"> {{ taskCompletionRate$ | async }}%</strong>
       </div>
 
       <div class="progress-track">
-        <div class="progress-bar" [style.width.%]="calculatedProgress$ | async"></div>
+        <div class="progress-bar" [style.width.%]="taskCompletionRate$ | async"></div>
       </div>
 
       <div class="progress-footer">
         <span> Project completion </span>
 
-        <strong> {{ calculatedProgress$ | async }}% complete </strong>
+        <strong> {{ taskCompletionRate$ | async }}% complete </strong>
       </div>
     </section>
 
