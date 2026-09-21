@@ -1,1 +1,197 @@
-<p>calendar works!</p>
+<section class="calendar-page">
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">PLANNING</span>
+
+      <h1>Calendar</h1>
+
+      <p>Keep track of deadlines, meetings, and important project dates.</p>
+    </div>
+
+    <button type="button" class="today-button" (click)="goToToday()">Today</button>
+  </div>
+
+  <div class="calendar-layout">
+    <!-- Main calendar -->
+    <section class="calendar-card">
+      <div class="calendar-toolbar">
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Previous month"
+          (click)="previousMonth()"
+        >
+          ‹
+        </button>
+
+        <div class="month-heading">
+          <h2>{{ monthYearLabel }}</h2>
+          <span>{{ currentMonthName }}</span>
+        </div>
+
+        <button type="button" class="icon-button" aria-label="Next month" (click)="nextMonth()">
+          ›
+        </button>
+      </div>
+
+      <!-- Weekday headings -->
+      <div class="weekday-row">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+      </div>
+
+      <!-- Calendar grid -->
+      <div class="calendar-grid">
+        <button
+          *ngFor="let day of calendarDays"
+          type="button"
+          class="calendar-day"
+          [class.empty]="day === null"
+          [class.today]="isToday(day)"
+          [class.selected]="isSelectedDate(day)"
+          (click)="selectDate(day)"
+        >
+          <ng-container *ngIf="day !== null">
+            <span class="day-number">
+              {{ day }}
+            </span>
+
+            <span *ngIf="hasEvents(day)" class="event-indicator"></span>
+
+            <div *ngIf="getEventsForDay(day).length" class="day-events">
+              <span
+                *ngFor="let event of getEventsForDay(day).slice(0, 2)"
+                class="mini-event"
+                [class]="getEventTypeClass(event.type)"
+              >
+                {{ event.title }}
+              </span>
+
+              <span *ngIf="getEventsForDay(day).length > 2" class="more-events">
+                +{{ getEventsForDay(day).length - 2 }} more
+              </span>
+            </div>
+          </ng-container>
+        </button>
+      </div>
+
+      <!-- Legend -->
+      <div class="calendar-legend">
+        <div class="legend-item">
+          <span class="legend-dot project"></span>
+          <span>Project</span>
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot task"></span>
+          <span>Task</span>
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot meeting"></span>
+          <span>Meeting</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right panel -->
+    <aside class="calendar-sidebar">
+      <!-- Selected date -->
+      <section class="side-card">
+        <div class="side-card-header">
+          <div>
+            <span class="eyebrow">SELECTED DATE</span>
+
+            <h3>
+              {{ selectedDate ? formatSelectedDate() : 'Select a date' }}
+            </h3>
+          </div>
+        </div>
+
+        <div *ngIf="selectedDate && selectedDateEvents.length" class="event-list">
+          <article *ngFor="let event of selectedDateEvents" class="event-card">
+            <div class="event-type" [class]="getEventTypeClass(event.type)"></div>
+
+            <div class="event-content">
+              <h4>{{ event.title }}</h4>
+
+              <span *ngIf="event.time">
+                {{ event.time }}
+              </span>
+
+              <span *ngIf="event.projectName">
+                {{ event.projectName }}
+              </span>
+
+              <p *ngIf="event.description">
+                {{ event.description }}
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div *ngIf="selectedDate && !selectedDateEvents.length" class="empty-state">
+          <div class="empty-icon">○</div>
+
+          <h4>No events</h4>
+
+          <p>Nothing is scheduled for this date.</p>
+        </div>
+
+        <div *ngIf="!selectedDate" class="empty-state">
+          <div class="empty-icon">＋</div>
+
+          <h4>Select a date</h4>
+
+          <p>Select a day on the calendar to see its events.</p>
+        </div>
+      </section>
+
+      <!-- Upcoming -->
+      <section class="side-card">
+        <div class="side-card-header">
+          <div>
+            <span class="eyebrow">UPCOMING</span>
+            <h3>Upcoming events</h3>
+          </div>
+
+          <span class="event-count">
+            {{ upcomingEvents.length }}
+          </span>
+        </div>
+
+        <div class="upcoming-list">
+          <article *ngFor="let event of upcomingEvents" class="upcoming-event">
+            <div class="upcoming-date">
+              <strong>
+                {{ event.date | date: 'dd' }}
+              </strong>
+
+              <span>
+                {{ event.date | date: 'MMM' }}
+              </span>
+            </div>
+
+            <div class="upcoming-details">
+              <h4>{{ event.title }}</h4>
+
+              <span *ngIf="event.time">
+                {{ event.time }}
+              </span>
+
+              <span *ngIf="event.projectName">
+                {{ event.projectName }}
+              </span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </aside>
+  </div>
+</section>
