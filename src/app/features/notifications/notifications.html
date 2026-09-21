@@ -1,0 +1,114 @@
+<section class="notifications-page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">ACTIVITY CENTER</span>
+
+      <h1>Notifications</h1>
+
+      <p>Stay updated with activity across your projects and team.</p>
+    </div>
+
+    <button
+      type="button"
+      class="mark-all-button"
+      (click)="markAllAsRead()"
+      [disabled]="unreadCount === 0"
+    >
+      Mark all as read
+    </button>
+  </header>
+
+  <section class="notification-summary">
+    <div class="summary-card">
+      <span class="summary-label">Total</span>
+      <strong>{{ notificationCount }}</strong>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Unread</span>
+      <strong>{{ unreadCount }}</strong>
+    </div>
+  </section>
+
+  <section class="notification-card">
+    <div class="notification-toolbar">
+      <div class="filter-tabs">
+        <button type="button" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">
+          All
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter === 'unread'"
+          (click)="setFilter('unread')"
+        >
+          Unread
+          <span *ngIf="unreadCount > 0">
+            {{ unreadCount }}
+          </span>
+        </button>
+
+        <button type="button" [class.active]="activeFilter === 'read'" (click)="setFilter('read')">
+          Read
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="filteredNotifications.length > 0" class="notification-list">
+      <article
+        *ngFor="let notification of filteredNotifications"
+        class="notification-item"
+        [class.unread]="!notification.read"
+        (click)="openNotification(notification)"
+      >
+        <div class="notification-icon" [ngClass]="getTypeClass(notification.type)">
+          <span *ngIf="notification.type === 'task'">✓</span>
+          <span *ngIf="notification.type === 'project'">◆</span>
+          <span *ngIf="notification.type === 'deadline'">!</span>
+          <span *ngIf="notification.type === 'team'">●</span>
+        </div>
+
+        <div class="notification-content">
+          <div class="notification-heading">
+            <h3>{{ notification.title }}</h3>
+
+            <span *ngIf="!notification.read" class="unread-dot"></span>
+          </div>
+
+          <p>{{ notification.message }}</p>
+
+          <time>
+            {{ notification.createdAt | date: 'MMM d, y, h:mm a' }}
+          </time>
+        </div>
+
+        <div class="notification-actions">
+          <button
+            *ngIf="!notification.read"
+            type="button"
+            class="read-button"
+            (click)="markAsRead(notification); $event.stopPropagation()"
+          >
+            Mark read
+          </button>
+
+          <button
+            type="button"
+            class="delete-button"
+            (click)="deleteNotification(notification); $event.stopPropagation()"
+          >
+            Delete
+          </button>
+        </div>
+      </article>
+    </div>
+
+    <div *ngIf="filteredNotifications.length === 0" class="empty-state">
+      <div class="empty-icon">✓</div>
+
+      <h3>No notifications</h3>
+
+      <p>There are no notifications in this category.</p>
+    </div>
+  </section>
+</section>

@@ -73,6 +73,10 @@ export class NotificationService {
     return this.notifications.filter((notification) => !notification.read).length;
   }
 
+  getNotificationsSnapshot(): Notification[] {
+    return [...this.notifications];
+  }
+
   markAsRead(id: number): void {
     const notification = this.notifications.find((notification) => notification.id === id);
 
@@ -99,5 +103,9 @@ export class NotificationService {
 
   private notifyChanges(): void {
     this.notificationsSubject.next(this.notifications);
+  }
+
+  get notificationCount(): number {
+    return this.notifications.length;
   }
 }
