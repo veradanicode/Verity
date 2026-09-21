@@ -186,22 +186,17 @@
         <input type="text" placeholder="Search projects, tasks, people…" aria-label="Search" />
       </div>
       <div class="topbar-actions">
-        <button class="icon-btn" type="button" aria-label="Notifications">
-          <svg viewBox="0 0 20 20" fill="none">
-            <path
-              d="M5 8a5 5 0 0 1 10 0c0 3.2 1 4.3 1.4 4.8H3.6C4 12.3 5 11.2 5 8Z"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M8.2 15.5a1.9 1.9 0 0 0 3.6 0"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
-            />
-          </svg>
-          <span class="icon-btn-dot"></span>
+        <button
+          type="button"
+          class="notification-button"
+          routerLink="/notifications"
+          aria-label="Open notifications"
+        >
+          <span class="notification-icon"> 🔔 </span>
+
+          <span *ngIf="unreadNotificationCount > 0" class="notification-count">
+            {{ unreadNotificationCount }}
+          </span>
         </button>
         <div class="avatar avatar-topbar">AK</div>
       </div>
