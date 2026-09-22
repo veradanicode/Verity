@@ -8,6 +8,7 @@ import { ProjectForm } from './features/project-form/project-form';
 import { TaskForm } from './features/task-form/task-form';
 import { Calendar } from './features/calendar/calendar';
 import { Notifications } from './features/notifications/notifications';
+import { Reports } from './features/reports/reports';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,10 @@ export const routes: Routes = [
       {
         path: 'notifications',
         component: Notifications,
+      },
+      {
+        path: 'reports',
+        component: Reports,
       },
       {
         path: '',
