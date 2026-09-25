@@ -321,4 +321,13 @@ export class Dashboard implements OnInit {
 
     return Math.ceil((today.getDate() + firstDayOfMonth.getDay()) / 7);
   }
+  getCurrentDay(): string {
+    const today = new Date();
+
+    return today.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
 }

@@ -4,7 +4,7 @@
   <section class="page-head">
     <div>
       <h1>Good morning, {{ userName }}</h1>
-      <p>{{ todayLabel }} — here's where things stand today.</p>
+      <p>{{ getCurrentDay() }} — here's where things stand today.</p>
     </div>
     <a routerLink="/dashboard/projects/new" class="new-project-btn">
       <span>+</span>
