@@ -7,6 +7,7 @@ import { Project, ProjectService } from '../../core/services/project';
 import { Task, TaskService } from '../../core/services/task';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { CalendarEvent, CalendarService } from '../../core/services/calendar';
 
 interface StatCard {
   label: string;
@@ -45,8 +46,15 @@ interface TeamMember {
 interface CalendarDay {
   label: string;
   date: number;
+  fullDate: string;
   isToday: boolean;
   hasEvent: boolean;
+}
+
+interface DashboardCalendarEvent {
+  time: string;
+  title: string;
+  meta: string;
 }
 
 @Component({
@@ -59,20 +67,31 @@ interface CalendarDay {
 export class Dashboard implements OnInit {
   private projectService: ProjectService;
   private taskService: TaskService;
+  private calendarService: CalendarService;
 
-  constructor(projectService: ProjectService, taskService: TaskService) {
+  constructor(
+    projectService: ProjectService,
+    taskService: TaskService,
+    calendarService: CalendarService,
+  ) {
     this.projectService = projectService;
     this.taskService = taskService;
+    this.calendarService = calendarService;
   }
 
   projects: ProjectRow[] = [];
   tasks: TaskRow[] = [];
   stats: StatCard[] = [];
+  calendarEventsData: CalendarEvent[] = [];
 
   ngOnInit(): void {
     const projects = this.projectService.getProjects();
 
     const tasks = this.taskService.getTasks();
+
+    this.calendarEventsData = this.calendarService.getEvents();
+
+    this.generateDashboardCalendar();
 
     this.projects = projects
       .filter((project) => project.status !== 'Completed')
@@ -191,15 +210,10 @@ export class Dashboard implements OnInit {
     { name: 'Chidi Nnamdi', role: 'QA', initials: 'CN', online: false },
   ];
 
-  calendarDays: CalendarDay[] = [
-    { label: 'Mon', date: 7, isToday: true, hasEvent: true },
-    { label: 'Tue', date: 8, isToday: false, hasEvent: false },
-    { label: 'Wed', date: 9, isToday: false, hasEvent: true },
-    { label: 'Thu', date: 10, isToday: false, hasEvent: true },
-    { label: 'Fri', date: 11, isToday: false, hasEvent: false },
-    { label: 'Sat', date: 12, isToday: false, hasEvent: false },
-    { label: 'Sun', date: 13, isToday: false, hasEvent: false },
-  ];
+  calendarDays: CalendarDay[] = [];
+  calendarEvents: DashboardCalendarEvent[] = [];
+
+  currentCalendarDate = new Date();
 
   get completionRate(): number {
     if (this.tasks.length === 0) {
@@ -225,5 +239,86 @@ export class Dashboard implements OnInit {
     this.taskService.updateTaskStatus(serviceTask.id, newStatus);
 
     task.done = newStatus === 'Completed';
+  }
+
+  private generateDashboardCalendar(): void {
+    const today = new Date();
+
+    // Start from Monday of the current week
+    const dayOfWeek = today.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+
+    this.calendarDays = Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + index);
+
+      const fullDate = this.formatDate(date);
+
+      return {
+        label: date.toLocaleDateString('en-US', {
+          weekday: 'short',
+        }),
+        date: date.getDate(),
+        fullDate,
+        isToday: fullDate === this.formatDate(today),
+        hasEvent: this.calendarEventsForDate(fullDate).length > 0,
+      };
+    });
+
+    this.calendarEvents = this.getUpcomingCalendarEvents();
+  }
+
+  private calendarEventsForDate(date: string): any[] {
+    return this.calendarEventsData.filter((event) => event.date === date);
+  }
+
+  private getUpcomingCalendarEvents(): DashboardCalendarEvent[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return this.calendarEventsData
+      .filter((event) => {
+        const eventDate = new Date(`${event.date}T00:00:00`);
+        return eventDate >= today;
+      })
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, 1)
+      .map((event) => ({
+        time: event.time ?? 'All day',
+        title: event.title,
+        meta: event.projectName ?? this.getEventMeta(event),
+      }));
+  }
+  private getEventMeta(event: CalendarEvent): string {
+    switch (event.type) {
+      case 'meeting':
+        return 'Team meeting';
+
+      case 'task':
+        return event.projectName ?? 'Task';
+
+      case 'project':
+        return event.projectName ?? 'Project';
+
+      default:
+        return '';
+    }
+  }
+
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+  getCurrentWeekNumber(): number {
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    return Math.ceil((today.getDate() + firstDayOfMonth.getDay()) / 7);
   }
 }

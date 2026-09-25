@@ -42,6 +42,7 @@ export class Projects implements OnInit {
   setStatus(status: string): void {
     this.selectedStatus = status;
   }
+
   getProjectProgress(projectId: number): number {
     const tasks = this.taskService.getTasksByProjectId(projectId);
 
