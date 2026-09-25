@@ -1,11 +1,349 @@
-<section class="reports-page">
-  <header class="page-header">
-    <span class="eyebrow">ANALYTICS</span>
+<div class="reports-page">
+  <!-- HEADER -->
+  <header class="reports-header">
+    <div>
+      <span class="eyebrow">WORKSPACE ANALYTICS</span>
 
-    <h1>Reports</h1>
+      <h1>Reports & Insights</h1>
 
-    <p>Monitor project, task, team, and financial performance.</p>
+      <p>A live overview of projects, tasks, deadlines, and financial performance.</p>
+    </div>
+
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      Live workspace data
+    </div>
   </header>
 
-  <div class="reports-placeholder">Reports dashboard coming together here.</div>
-</section>
+  <!-- KPI CARDS -->
+  <section class="kpi-grid">
+    <article class="kpi-card">
+      <div class="kpi-icon projects-icon">◈</div>
+
+      <div>
+        <span class="kpi-label">TOTAL PROJECTS</span>
+
+        <strong>{{ totalProjects }}</strong>
+
+        <p>{{ activeProjects }} active</p>
+      </div>
+    </article>
+
+    <article class="kpi-card">
+      <div class="kpi-icon tasks-icon">✓</div>
+
+      <div>
+        <span class="kpi-label">TOTAL TASKS</span>
+
+        <strong>{{ totalTasks }}</strong>
+
+        <p>{{ completedTasks }} completed</p>
+      </div>
+    </article>
+
+    <article class="kpi-card">
+      <div class="kpi-icon progress-icon">↗</div>
+
+      <div>
+        <span class="kpi-label">TASK COMPLETION</span>
+
+        <strong>{{ taskCompletionRate }}%</strong>
+
+        <p>{{ pendingTasks }} remaining</p>
+      </div>
+    </article>
+
+    <article class="kpi-card">
+      <div class="kpi-icon budget-icon">₦</div>
+
+      <div>
+        <span class="kpi-label">BUDGET USED</span>
+
+        <strong>{{ budgetUtilization }}%</strong>
+
+        <p>₦{{ remainingBudget | number }} remaining</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- OVERVIEW GRID -->
+  <section class="overview-grid">
+    <!-- PROJECT PROGRESS -->
+    <article class="report-card">
+      <div class="card-heading">
+        <div>
+          <span class="eyebrow">PROJECTS</span>
+          <h2>Project progress</h2>
+        </div>
+
+        <strong class="large-number"> {{ averageProjectProgress }}% </strong>
+      </div>
+
+      <div class="large-progress">
+        <div class="large-progress-fill" [style.width.%]="averageProjectProgress"></div>
+      </div>
+
+      <div class="progress-meta">
+        <span> {{ completedProjects }} completed </span>
+
+        <span> {{ activeProjects }} active </span>
+      </div>
+    </article>
+
+    <!-- TASK PROGRESS -->
+    <article class="report-card">
+      <div class="card-heading">
+        <div>
+          <span class="eyebrow">TASKS</span>
+          <h2>Task completion</h2>
+        </div>
+
+        <strong class="large-number"> {{ taskCompletionRate }}% </strong>
+      </div>
+
+      <div class="large-progress">
+        <div class="large-progress-fill" [style.width.%]="taskCompletionRate"></div>
+      </div>
+
+      <div class="progress-meta">
+        <span> {{ completedTasks }} completed </span>
+
+        <span> {{ pendingTasks }} remaining </span>
+      </div>
+    </article>
+  </section>
+
+  <!-- DEADLINES + PRIORITIES -->
+  <section class="analysis-grid">
+    <!-- DEADLINES -->
+    <article class="report-card">
+      <div class="card-heading">
+        <div>
+          <span class="eyebrow">DEADLINES</span>
+          <h2>Upcoming work</h2>
+        </div>
+
+        <span class="warning-count"> {{ overdueTasks }} overdue </span>
+      </div>
+
+      <div class="deadline-list" *ngIf="upcomingTasks.length > 0; else noUpcoming">
+        <div class="deadline-item" *ngFor="let item of upcomingTasks">
+          <div class="deadline-main">
+            <strong>
+              {{ item.task.title }}
+            </strong>
+
+            <span>
+              {{ item.task.projectName }}
+            </span>
+          </div>
+
+          <span class="deadline-badge" [class.urgent]="item.daysRemaining <= 1">
+            {{ getDeadlineLabel(item.daysRemaining) }}
+          </span>
+        </div>
+      </div>
+
+      <ng-template #noUpcoming>
+        <div class="empty-state">
+          <span>✓</span>
+          <p>No upcoming deadlines within 7 days.</p>
+        </div>
+      </ng-template>
+    </article>
+
+    <!-- PRIORITIES -->
+    <article class="report-card">
+      <div class="card-heading">
+        <div>
+          <span class="eyebrow">TASK DISTRIBUTION</span>
+          <h2>Priority breakdown</h2>
+        </div>
+      </div>
+
+      <div class="priority-list">
+        <div class="priority-item" *ngFor="let priority of priorityReports">
+          <div class="priority-top">
+            <div class="priority-name">
+              <span
+                class="priority-dot"
+                [class.high]="priority.name === 'High'"
+                [class.medium]="priority.name === 'Medium'"
+                [class.low]="priority.name === 'Low'"
+              >
+              </span>
+
+              {{ priority.name }}
+            </div>
+
+            <strong>
+              {{ priority.count }}
+            </strong>
+          </div>
+
+          <div class="priority-bar">
+            <div
+              class="priority-fill"
+              [class.high]="priority.name === 'High'"
+              [class.medium]="priority.name === 'Medium'"
+              [class.low]="priority.name === 'Low'"
+              [style.width.%]="priority.percentage"
+            ></div>
+          </div>
+
+          <span class="priority-percentage"> {{ priority.percentage }}% of tasks </span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- FINANCIAL OVERVIEW -->
+  <section class="financial-card">
+    <div class="financial-heading">
+      <div>
+        <span class="eyebrow">FINANCIAL OVERVIEW</span>
+        <h2>Budget performance</h2>
+      </div>
+
+      <strong> ₦{{ totalBudget | number }} </strong>
+    </div>
+
+    <div class="financial-grid">
+      <div class="financial-stat">
+        <span>Total budget</span>
+
+        <strong> ₦{{ totalBudget | number }} </strong>
+      </div>
+
+      <div class="financial-stat">
+        <span>Amount spent</span>
+
+        <strong> ₦{{ totalSpent | number }} </strong>
+      </div>
+
+      <div class="financial-stat">
+        <span>Remaining</span>
+
+        <strong> ₦{{ remainingBudget | number }} </strong>
+      </div>
+
+      <div class="financial-stat">
+        <span>Utilization</span>
+
+        <strong> {{ budgetUtilization }}% </strong>
+      </div>
+    </div>
+
+    <div class="budget-progress">
+      <div class="budget-progress-fill" [style.width.%]="budgetUtilization"></div>
+    </div>
+  </section>
+
+  <!-- PROJECT BREAKDOWN -->
+  <section class="project-performance">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">PROJECT BREAKDOWN</span>
+
+        <h2>Performance by project</h2>
+      </div>
+
+      <span class="record-count"> {{ projectReports.length }} projects </span>
+    </div>
+
+    <div class="project-table" *ngIf="projectReports.length > 0; else noProjects">
+      <div class="table-header">
+        <span>PROJECT</span>
+        <span>PROGRESS</span>
+        <span>TASKS</span>
+        <span>BUDGET</span>
+        <span>STATUS</span>
+      </div>
+
+      <div class="project-row" *ngFor="let report of projectReports">
+        <!-- PROJECT -->
+        <div class="project-name">
+          <div class="project-avatar">
+            {{ report.project.name.charAt(0) }}
+          </div>
+
+          <div class="project-name-text">
+            <strong>
+              {{ report.project.name }}
+            </strong>
+
+            <span>
+              {{ report.project.client }}
+            </span>
+          </div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="project-progress">
+          <div class="progress-value">
+            <strong> {{ report.projectProgress }}% </strong>
+          </div>
+
+          <div class="small-progress">
+            <div class="small-progress-fill" [style.width.%]="report.projectProgress"></div>
+          </div>
+        </div>
+
+        <!-- TASKS -->
+        <div class="table-value">
+          <strong> {{ report.completedTasks }}/{{ report.totalTasks }} </strong>
+
+          <span> {{ report.overdueTasks }} overdue </span>
+        </div>
+
+        <!-- BUDGET -->
+        <div class="table-value">
+          <strong> {{ report.budgetUsed }}% </strong>
+
+          <span> ₦{{ report.project.spent | number }} spent </span>
+        </div>
+
+        <!-- STATUS -->
+        <div>
+          <span
+            class="status-badge"
+            [class.completed]="report.project.status === 'Completed'"
+            [class.active]="
+              report.project.status !== 'Completed' && report.riskLevel === 'On Track'
+            "
+            [class.attention]="report.riskLevel === 'Needs Attention'"
+          >
+            {{ report.riskLevel }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noProjects>
+      <div class="empty-state">
+        <span>◈</span>
+        <p>No project data available.</p>
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="report-summary">
+    <div class="summary-icon">✓</div>
+
+    <div>
+      <span class="eyebrow"> REPORT SUMMARY </span>
+
+      <h2>
+        {{ completedProjects }} of {{ totalProjects }}
+        projects completed
+      </h2>
+
+      <p>
+        {{ completedTasks }} of {{ totalTasks }}
+        tasks are complete, with
+        {{ overdueTasks }} overdue task{{ overdueTasks === 1 ? '' : 's' }}.
+      </p>
+    </div>
+  </section>
+</div>
